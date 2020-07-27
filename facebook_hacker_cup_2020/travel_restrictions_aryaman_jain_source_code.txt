@@ -1,0 +1,119 @@
+#include<bits/stdc++.h>
+#define lld long long
+#define pb push_back
+#define mk make_pair
+#define MAX (lld)1e18+7
+#define lim (lld)1e9+7
+#define MAX2 (int)2e5+9
+#define ff first
+#define ss second
+#define fastio ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+using namespace std;
+
+const lld mod=lim;
+
+lld power(lld x, lld y, lld p)  
+{   lld res = 1;     x = x % p; if (x == 0) return 0;  
+  
+    while (y > 0)  
+    { if (y & 1) res = (res*x) % p;  y = y>>1; x = (x*x) % p;   }  
+    return res;  } 
+
+
+int extend_gcd(int a, int b, int& x, int& y) {
+    if (b == 0) { x = 1;y = 0;return a;}
+    int x1, y1;
+    int d = extend_gcd(b, a % b, x1, y1);
+    x = y1; y = x1 - y1 * (a / b);return d;	}
+
+int rowNum[]={-1,0,0,1};
+int colNum[]={0,-1,1,0};
+
+std::vector<int> v[100];
+std::vector<int> vis(100);
+
+void dfs(int i)
+{
+	vis[i]=1;
+
+	for(int x:v[i])
+	{
+		if(!vis[x])
+			dfs(x);
+	}
+}
+
+int main()
+{
+	#ifndef ONLINE_JUDGE
+    // for getting input from input.txt
+    freopen("input.txt", "r", stdin);
+    // for writing output to output.txt
+    freopen("output.txt", "w", stdout);
+	#endif
+
+	fastio
+	int t;
+	cin>>t;
+
+	for(int cas=1;cas<=t;cas++)
+	{
+		int n;
+		cin>>n;
+
+		std::vector<int> in(n+2,0);
+		std::vector<int> out(n+2,0);
+
+		char c;
+		for(int i=1;i<=n;i++)
+		{
+			cin>>c;	
+			if(c=='Y')
+				in[i]=1;
+		}
+
+		for(int i=1;i<=n;i++)
+		{	
+			cin>>c;	
+			if(c=='Y')
+				out[i]=1;
+		}
+
+		for(int i=1;i<=n;i++)
+		{
+			if(out[i]==1)
+			{
+				if(in[i-1]==1)
+					v[i].pb(i-1);
+
+				if(in[i+1]==1)
+					v[i].pb(i+1);
+			}
+		}
+
+		cout<<"Case #"<<cas<<":\n";
+		for(int i=1;i<=n;i++)
+		{
+			dfs(i);
+
+			for(int j=1;j<=n;j++)
+			{
+				if(vis[j]==1)
+					cout<<'Y';
+				else
+					cout<<'N';
+			}
+
+			for(int i=0;i<=n;i++)
+				vis[i]=0;
+
+			cout<<endl;
+		}
+
+		for(int i=1;i<=60;i++)
+			v[i].clear();
+
+		for(int i=0;i<=60;i++)
+			vis[i]=0;
+	}
+}

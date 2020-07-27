@@ -1,0 +1,93 @@
+#include<bits/stdc++.h>
+#define lld long long
+#define pb push_back
+#define mk make_pair
+#define MAX (lld)1e18+7
+#define lim (lld)1e9+7
+#define MAX2 (lld)1e6+9
+#define ff first
+#define ss second
+#define fastio ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+using namespace std;
+
+const lld mod=lim;
+
+lld power(lld x, lld y, lld p)  
+{   lld res = 1;     x = x % p; if (x == 0) return 0;  
+  
+    while (y > 0)  
+    { if (y & 1) res = (res*x) % p;  y = y>>1; x = (x*x) % p;   }  
+    return res;  } 
+
+
+lld extend_gcd(lld a, lld b, lld& x, lld& y) {
+    if (b == 0) { x = 1;y = 0;return a;}
+    lld x1, y1;
+    lld d = extend_gcd(b, a % b, x1, y1);
+    x = y1; y = x1 - y1 * (a / b);return d;	}
+
+lld rowNum[]={-1,0,0,1};
+lld colNum[]={0,-1,1,0};
+
+void print(lld cas,lld ar)
+{
+	cout<<"Case #"<<cas<<": "<<ar<<endl;
+}
+
+int main()
+{
+	#ifndef ONLINE_JUDGE
+    // for getting input from input.txt
+    freopen("input.txt", "r", stdin);
+    // for writing output to output.txt
+    freopen("output.txt", "w", stdout);
+	#endif
+
+	fastio
+	lld t;
+	cin>>t;
+
+	for(lld cas=1;cas<=t;cas++)
+	{
+		lld n;
+		cin>>n;
+
+		std::vector<pair<lld,lld>> v;
+		for(lld i=0;i<n;i++)
+		{
+			lld x,y;
+			cin>>x>>y;
+			v.pb({x,y});
+		}
+
+		sort(v.begin(), v.end());
+
+		map<lld,lld>right,left;
+
+		for(lld i=0;i<n;i++)
+		{
+			lld coor = v[i].ff+v[i].ss;
+			right[coor] = max(right[coor],right[v[i].ff]+v[i].ss);
+		}
+
+		for(lld i=n-1;i>=0;i--)
+		{
+			lld coor = v[i].ff-v[i].ss;
+			left[coor] = max(left[coor],left[v[i].ff]+v[i].ss);
+		}
+
+		lld ans=-MAX;
+
+		for(auto x:right)
+		{
+			ans = max(ans,x.ss+left[x.ff]);
+		}
+
+		for(auto x:left)
+		{
+			ans = max(ans,x.ss+right[x.ff]);
+		}
+
+		print(cas,ans);
+	}
+}
